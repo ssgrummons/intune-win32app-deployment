@@ -1,0 +1,62 @@
+@startuml
+Title "Overall DevOps Process"
+actor "Application Packager" as dev
+actor "Quality Assurance" as qa
+actor "Operations" as ops
+participant "Repo::App Dev Branch" as devbranch
+participant "Repo::Main" as mainbranch
+participant "Intune - Dev" as devintune
+participant "Intune - Prod" as prodintune
+note over devbranch
+ New branch for 
+ every application
+endnote
+dev -> devbranch : Create Branch
+activate dev
+devbranch --> dev
+dev -> devintune : Do Dev Testing in Development Environment
+devintune --> dev
+dev -> devintune : Configure and backup assignments to Git
+note left
+ The assignments and groups 
+ are created and backed up
+ and can be deployed
+ in PROD tenants via script
+endnote
+devintune -[#blue]> devbranch : <color #blue>Backup Automation</color>
+devbranch --> dev
+dev -> devbranch : Commit Code and submit pull request
+note left 
+ The developer shares 
+ the test cases
+ and test results 
+ with QA
+endnote
+devbranch -> qa : Pull Request
+activate qa
+note left
+ The QA review
+ test cases and
+ test results
+endnote
+qa --> devbranch : Approve 
+devbranch --> dev : 
+dev -> devbranch : Merge Code
+devbranch -> mainbranch : Code is merged
+mainbranch --> dev
+dev ->x devbranch : Delete Branch
+deactivate dev
+qa -> ops : Package ready \nfor Deployment
+deactivate qa
+activate ops
+ops -> mainbranch : Build Package
+mainbranch -[#blue]> ops : <color #blue>Artifacts Created from Automation</color>
+ops -> mainbranch : Deploy package to Intune
+mainbranch -[#blue]> prodintune : <color #blue>Deploy using Automation</color>
+prodintune --> ops
+ops -> mainbranch : Deploy assignments to Intune
+mainbranch -[#blue]> prodintune : <color #blue>Deploy using Automation</color>
+prodintune --> ops
+
+
+@enduml

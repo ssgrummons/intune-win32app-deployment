@@ -1,0 +1,39 @@
+@startuml Win32Deploy
+Title "Automation Functionality and Usage"
+actor "Engineer" as ops
+participant "Deploy-Win32.ps1" as deploy
+participant "Backup-Win32.ps1" as backup
+participant "Repository" as repo
+participant Intune
+ops -> deploy : Start Deployment Script
+activate ops
+activate deploy
+deploy -> repo : Get package to deploy
+repo --> deploy 
+deploy -> Intune : Deploy application
+Intune --> deploy : Return app config in JSON
+deploy -> repo : Save app config
+repo --> deploy
+deploy --> ops
+deactivate deploy
+deactivate ops
+ops -> Intune : Manually Assign app package to users and devices in portal
+activate ops
+Intune --> ops
+deactivate ops 
+ops -> backup : Start Backup Process
+activate ops
+activate backup
+backup -> Intune : Get App Config and Assignments
+Intune --> backup 
+backup -> repo : Save App Config\nand Assignments 
+repo --> backup 
+backup --> ops
+deactivate backup
+deactivate ops
+ops -> repo : Commit changes to GitHub
+activate ops
+repo --> ops
+deactivate ops
+@enduml
+

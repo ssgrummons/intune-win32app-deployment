@@ -1,0 +1,39 @@
+@startuml Win32Backup
+participant "::Backup()" as backup
+participant Intune
+entity "./app/deliverable.intunewin" as intunewin
+entity "./app/AppConfig.json" as appconfig
+entity "./Assignments/AssignmentConfig.json" as assignment
+
+activate backup
+backup -> appconfig : Get Application \nConfig
+appconfig --> backup 
+alt No Intune ID in AppConfig
+    backup -> backup : Package must be \ndeployed first
+else Intune ID in AppConfig
+    backup -> Intune : GET Application Config
+    Intune --> backup
+    alt Intune AppConfig != Local AppConfig
+        backup -> appconfig : Update \nAppConfig
+        appconfig --> backup
+    else Intune AppConfig == Local AppConfig
+        backup -> backup : No changes \nnecessary
+    end
+    alt Application is assigned
+        backup -> Intune : GET Application Assignments
+        Intune --> backup 
+        backup -> assignment : Get Assigment Config
+        assignment --> backup 
+        alt Intune Assignments != AssignmentConfig
+            backup -> assignment : Update \nAssignmentConfig
+            assignment --> backup
+        else Intune Assignments == AssignmentConfig
+            backup -> backup : No changes \nnecessary
+        end
+    else
+    end
+
+end
+
+deactivate backup
+@enduml

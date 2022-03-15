@@ -1,0 +1,33 @@
+@startuml
+actor Developer as dev
+actor Operator as ops #Grey
+participant "Repo::Dev" as devbranch
+participant "Repo::Backup" as backupbranch
+participant "Repo::Main" as mainbranch
+participant TravisCI as travis
+participant Intune as intune
+dev -> devbranch : Commit Code
+activate devbranch
+devbranch -> mainbranch : Merge Code
+deactivate devbranch
+activate mainbranch
+mainbranch -> ops : Pull Request
+ops --> mainbranch : Approve 
+mainbranch -> travis 
+deactivate mainbranch
+travis -> intune : ::Deploy()
+intune -> travis : ::Backup()
+travis -> backupbranch : Commit Code to Backup
+activate backupbranch
+backupbranch -> mainbranch : Merge Code
+deactivate backupbranch
+activate mainbranch
+mainbranch -> ops : Pull Request
+ops --> mainbranch : Approve 
+mainbranch -> travis 
+deactivate mainbranch
+travis -> intune : ::Deploy()
+intune --> travis : No Change
+@enduml
+
+
