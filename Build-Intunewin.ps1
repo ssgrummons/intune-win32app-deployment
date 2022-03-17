@@ -6,8 +6,7 @@
     Build script imports the configuration from Config.ps1 and automates the build of the .intunewin file.
                 
 .NOTES
-    In order for content to be signed, the Code Signing Certificate must be installed.
-    For instructions, go to the CISO Publisher Page: https://w3.ibm.com/cybersecurity/shared-services/#!/codesigning 
+    In order for content to be signed, a Code Signing Certificate must be installed in your local certificate store
     Required Dependencies
         Install-Module -Name IntuneWin32App
 #>    

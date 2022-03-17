@@ -69,16 +69,3 @@ There are opportunities to further automate Unit testing and deployments using C
 
 ![Deployment Diagram](out/docs/Win32Deploy/Win32Deploy.png)
 
-#### Backup Script Process
-*This script still needs to be written.  The Diagram below may change based on what is discovered during development.*
-
-The Backup Script should be idempotent; if there are no changes to either the app config or the assignments there will be no changes to the backup repository.  This script can be executed both by Travis CI and an independent backup process (This allows us to track any modifications made in the portal).
-![Backup Diagram](out/docs/Win32Backup/Win32Backup.png)
-
-### Under Development
-
-We want to continue refining this process to increase idempotency.  The diagrams above document the end state; however, this repository is not yet there.  We are working on the following functionality
-- ~~After deploying the app, saving the JSON config file back to the same directory~~
-- Making `Deploy-Win32.ps1` idempotent so that if the Deploy is ran again and the app is deployed (using the JSON that was saved on the first deployment), then the app is either PATCHED or nothing happens.
-- ~~Saving the app assignments to the `Assignments` Directory~~  This is done by calling the recently added function from `lib\Functions.ps1`: `InvokeIntuneBackupClientAppAssignment`
-- Automating the regular backup of app configs and assignments to this directory
