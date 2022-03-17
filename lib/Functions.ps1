@@ -39,7 +39,13 @@ Function Set-Intunewin{
     )
     $SourceFolder = (Resolve-Path ".\src").Path
     $OutputFolder = (Resolve-Path ".").Path
-    New-IntuneWin32AppPackage -SourceFolder $SourceFolder -OutputFolder $OutputFolder -SetupFile $SetupFile -Verbose 
+    try {
+        Write-Host "Building Intunewin Package"
+        New-IntuneWin32AppPackage -SourceFolder $SourceFolder -OutputFolder $OutputFolder -SetupFile $SetupFile -Verbose 
+    } 
+    catch {
+        Write-Host "Unable to Build IntuneWin Package from $SetupFile"
+    }
 }
 
 Function Build-Directories{
@@ -57,7 +63,7 @@ Function Build-Directories{
     If ($SignFile){
         Ensure-SignedCode -File $SetupFilePath
     }
-
+    <#
     If ($SetupFile -match "ps1$"){
         Write-Host "Converting Powershell to EXE"
         $OutputEXE = ($SetupFilePath.Split('.')[0]) + ".exe"
@@ -94,7 +100,7 @@ Function Build-Directories{
         }
         $SetupFile = Split-Path $OutputEXE -Leaf
     }
-
+    #>
     Set-Intunewin -SetupFile $SetupFile
 }
 
@@ -545,3 +551,6 @@ function RestoreClientAppAssignment {
         }
     }
 }
+
+
+Write-Host "All Necessary Functions Loaded"

@@ -31,14 +31,14 @@ If ("" -eq $Win32Folder) {
         $win32Folders = Get-Win32Folders
         ForEach ($win32Folder in $win32Folders) {
             try {
-                Write-Host "Processing Folder $win32Folder.Name"
+                Write-Host "Processing Folder $win32Folder"
                 $path = (Resolve-Path $win32Folder).Path
                 Write-Host $path
                 Build-Directories -Folder $path
                 Set-Location $scriptpath
             }
             catch {
-                Write-Host "Error Building Directory $win32Folder.Name"
+                Write-Host "Error Building Directory $win32Folder"
                 Set-Location $scriptpath
             }
         }        

@@ -1,29 +1,36 @@
 # 
-$SetupFile = "ospw32.exe"
-$SignFile = $True
+# $SetupFile is used to name the intunewin file
+$SetupFile = "MySetupFile.msi"
 
-# PS to EXE Required Parameters
-$Title = $null
-$Company = $null
-$Version = $null
-$RequireAdmin = $False
-$noConsole = $False
-# End of PS to EXE Required Parameters
+$SignFile = $False
 
 $FilePath = (Get-ChildItem -File | where-object {$_.Name -match "intunewin$"}).FullName
 $DisplayName = (Split-Path (Get-Location) -Leaf).Split("_")[1] #This grabs the display name from the folder name
-$Description = ""
-$Publisher = "PC@IBM"
-$InstallCommandLine = ""
-$UninstallCommandLine = ""
+$DisplayVersion = "1.1.0"
+$AppCategory =  "Utilities"
+
+$Description = "This is my app.  There are many like it but this one is mine."
+
+$Publisher = "MyCorp"
+$InstallCommandLine = "MySetupFile.msi"
+$UninstallCommandLine = "powershell.exe -Executionpolicy Bypass -File Uninstall.ps1"
 $InstallExperience = "system"
-$RestartBehavior = "supress"
-$Developer = ""
-$Notes = "PC@IBM Required"
-$Owner = ""
-$InfomationURL = ""
-$PrivacyURL = "https://w3.ibm.com/w3-privacy-notice"
+$RestartBehavior = "suppress"
+$Developer = "Your Name"
+$Notes = ""
+$Owner = "Your Company"
+$InfomationURL = "www.mycorp.com"
+$PrivacyURL = "https://privacyinfo.mycompany.com"
 $CompanyPortalFeaturedApp = $False
+
+$IconPath = (Resolve-Path "mypic.png")
+$Icon = New-IntuneWin32AppIcon -FilePath $IconPath
+
+$RequirementRule = New-IntuneWin32AppRequirementRule -Architecture x64 -MinimumSupportedOperatingSystem 1607
+
+$DetectionRule1 = New-IntuneWin32AppDetectionRuleMSI -ProductCode "{8A0007E4-9D8E-4F82-828B-177A53AFF519}"
+$DetectionRule = @($DetectionRule1)
+
 
 <#
 
